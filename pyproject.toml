@@ -14,5 +14,5 @@ dependencies = [
     "urllib3"
 ]
 readme = "README.md"
-license = ["MIT"]
-license-file = ["LICENSE"]
+license = "MIT"
+license-files = ["LICENSE"]
