@@ -1,7 +1,32 @@
 from pathlib import Path
-from matplotlib import pyplot, style
+from matplotlib import pyplot
 from sklearn.metrics import confusion_matrix
 
+custom_style = {
+    "axes.axisbelow": True,
+    "axes.facecolor": "#EAE5FA",
+    "axes.grid": True,
+    "axes.labelsize": "xx-large",
+    "axes.labelpad": 20.0,
+    "axes.spines.bottom": False,
+    "axes.spines.left": False,
+    "axes.spines.right": False,
+    "axes.spines.top": False,
+    "axes.titlesize": "xx-large",
+    "axes.titlepad": 20.0,
+    "axes.titleweight": "bold",
+    "font.family": "monospace",
+    "font.size": 20,
+    "grid.color": "#FEFEFE",
+    "grid.linewidth": 1.0,
+    "grid.linestyle": "-",
+    "legend.fontsize": "x-large",
+    "lines.linewidth": 2.5,
+    "xtick.color": "none",
+    "xtick.labelcolor": "black",
+    "ytick.color": "none",
+    "ytick.labelcolor": "black"
+}
 
 
 def line_plot(
@@ -13,6 +38,8 @@ def line_plot(
     yticks: list[int] | None = None,
     save_path: str | Path | None = None,
 ):
+    pyplot.style.use(custom_style)
+
     fig, ax = pyplot.subplots(figsize=figsize, dpi=300, layout="constrained")
 
     ax.set_title(title)
@@ -40,6 +67,8 @@ def pie_plot(
     figsize: tuple[int, int],
     save_path: str | Path | None = None,
 ):
+    pyplot.style.use(custom_style)
+
     fig, ax = pyplot.subplots(figsize=figsize, dpi=300, layout="constrained")
 
     if title: ax.set_title(title)
@@ -65,6 +94,8 @@ def plot_cm(
     cmap: str = "Blues",
     save_path: str | Path | None = None
 ):
+    pyplot.style.use(custom_style)
+
     cm = confusion_matrix(labels_data, predictions_data)
     classes_int, classes_str = [
         (list(_int), list(_str))
