@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "danbr25"
+version = "1.0.0"
+dependencies = [
+    "matplotlib",
+    "pandas",
+    "sklearn",
+    "torch",
+    "torchvision",
+    "urllib3"
+]
+readme = "README.md"
+license = ["MIT"]
+license-file = ["LICENSE"]
