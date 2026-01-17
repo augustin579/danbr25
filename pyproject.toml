@@ -8,11 +8,10 @@ version = "1.0.0"
 dependencies = [
     "matplotlib",
     "pandas",
-    "sklearn",
-    "torch",
-    "torchvision",
+    "scikit-learn",
     "urllib3"
 ]
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
+

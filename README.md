@@ -4,6 +4,19 @@ A simple library for downloading, plotting, and training models from danbooru202
 ## Installation
 
 ```bash
+# Chose one
+## Install PyTorch.
+## Use this command if you don't have GPU:
+## Option 1
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+## But if you have GPU with CUDA version 13.0, use this command:
+## For another version, check the PyTorch documentation.
+## Option 2
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
+
+
+# Install danbr25 (Required)
 pip install git+https://www.github.com/augustin579/danbr25.git
 ```
 
