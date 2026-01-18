@@ -40,7 +40,8 @@ def dataset_init(dataset_dir, batch_size, num_workers, train_transform, validati
     test_data = TransformedSubset(test_data, validation_transform)
 
     train_loader = data.DataLoader(
-        train_data, batch_size=batch_size, shuffle=True, num_workers=num_workers, persistent_workers=True, pin_memory=pin_memory
+        train_data, batch_size=batch_size, shuffle=True,num_workers=num_workers,
+        persistent_workers=True, pin_memory=pin_memory
     )
     validation_loader = data.DataLoader(validation_data, batch_size=batch_size)
     test_loader = data.DataLoader(test_data, batch_size=batch_size)
@@ -89,6 +90,7 @@ def train(model, loader, optimizer, loss_fn, device, scaler):
 @torch.no_grad()
 def validation(model, loader, loss_fn, device, classes):
     model.eval()
+    total = 0
     total_loss = 0
     all_labels = []
     all_predictions = []
@@ -103,6 +105,7 @@ def validation(model, loader, loss_fn, device, classes):
         loss = loss_fn(outputs, labels)
 
         total_loss += loss.item() * images.size(0)
+        total += labels.size(0)
 
         all_labels.append(labels.cpu().tolist())
         all_predictions.append(outputs.cpu().argmax(dim=1).tolist())
