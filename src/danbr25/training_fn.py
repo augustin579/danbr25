@@ -107,8 +107,8 @@ def validation(model, loader, loss_fn, device, classes):
         total_loss += loss.item() * images.size(0)
         total += labels.size(0)
 
-        all_labels.append(labels.cpu().tolist())
-        all_predictions.append(outputs.cpu().argmax(dim=1).tolist())
+        all_labels.extend(labels.cpu().squeeze().tolist())
+        all_predictions.extend(outputs.cpu().argmax(dim=1).squeeze().tolist())
 
 
     validation_loss = total_loss/total
@@ -149,8 +149,8 @@ def test(model, loader, loss_fn, device, classes):
         total_loss += loss.item() * images.size(0)
         total += labels.size(0)
 
-        all_predictions.extend(predictions.cpu().tolist())
-        all_labels.extend(labels.cpu().tolist())
+        all_labels.extend(labels.cpu().squeeze().tolist())
+        all_predictions.extend(predictions.cpu().squeeze().tolist())
 
     test_loss = total_loss/total
 
