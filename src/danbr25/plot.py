@@ -86,7 +86,7 @@ def pie_plot(
 def plot_cm(
     labels_data: list[int],
     predictions_data: list[int],
-    classes_labels: dict[int, str],
+    classes_labels: dict[str, int],
     figsize: tuple[int, int],
     cm_text: list[list[str]] | None = None,
     cm_text_color: str = "yellow",
@@ -97,11 +97,7 @@ def plot_cm(
     pyplot.style.use(custom_style)
 
     cm = confusion_matrix(labels_data, predictions_data)
-    classes_int, classes_str = [
-        (list(_int), list(_str))
-        for _int, _str in
-        classes_labels.items()
-    ]
+    classes_str, classes_int = zip(*classes_labels.items())
 
     fig, ax = pyplot.subplots(
         figsize=figsize, dpi=300, layout="constrained"
