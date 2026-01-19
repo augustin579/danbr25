@@ -2,6 +2,7 @@ import torch
 from torch.utils import data
 from torchvision.datasets import ImageFolder
 from sklearn.metrics import classification_report
+from safetensors.torch import save_file
 
 class TransformedSubset(data.Dataset):
     def __init__(self, subset, transform=None):
@@ -169,4 +170,12 @@ def test(model, loader, loss_fn, device, classes):
 
     return report
 
+
+def pth_to_safetensors(
+    model_path: str,
+    save_path: str | Path | None = None
+    device: str="cpu"
+):
+    model = torch.load(model_path, map_location=device)
+    save_file(model, save_path)
 

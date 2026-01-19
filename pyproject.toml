@@ -8,6 +8,7 @@ version = "1.0.0"
 dependencies = [
     "matplotlib",
     "pandas",
+    "safetensors",
     "scikit-learn",
     "urllib3"
 ]
