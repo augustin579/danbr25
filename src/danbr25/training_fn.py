@@ -171,11 +171,11 @@ def test(model, loader, loss_fn, device, classes):
     return report
 
 
-def pth_to_safetensors(
-    model_path: str,
+def model_to_safetensors(
+    model: torch.nn.Module,
     save_path: str | Path | None = None
     device: str="cpu"
 ):
-    model = torch.load(model_path, map_location=device)
-    save_file(model, save_path)
+    model.eval()
+    save_file(model.state_dict(), save_path, device)
 
