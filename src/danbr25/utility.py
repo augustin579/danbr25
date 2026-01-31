@@ -1,4 +1,5 @@
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
 from PIL import Image
 
 def _scaler(
@@ -23,10 +24,10 @@ def _scaler(
         raise
 
 
-def images_scaler(
+def resize_images(
     images_dir: str | Path,
     save_dir: str | Path,
-    max_size: int,
+    max_image_size: int,
     recursive: bool=False,
 ):
     images_dir = Path(images_dir)
@@ -46,9 +47,11 @@ def images_scaler(
   
                 save_dest = save_dest / image.name
 
-                _scaler(image, save_dest, max_size)
+            with ThreadPoolExecutor(max_workers=12) as Executor:
+                Executor.submit(_scaler, image, save_dest, max_image_size)
     else:
         for image in images_dir.iterdir():
             if not image.is_file(): continue
 
-            _scaler(image, save_dir / image.name, max_size)
+            with ThreadPoolExecutor(max_workers=12) as Executor:
+                Executor.submit(_scaler, image, save_dir / image.name, max_image_size)

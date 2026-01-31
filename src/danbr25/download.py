@@ -59,7 +59,10 @@ def download_images(
     parquets_dir: str,
     aspect_ratio: dict[Literal["min", "max"], float],
     save_dir: str,
-    filter_ai: bool=True
+    filter_ai: bool=True,
+    max_retry: int = 3,
+    timeout: float = 15,
+    backoff_factor: float = 0.5
 ):
     use_column = ['id', 'file_url', 'file_ext', 'tag_string', 'image_height', 'image_width']
     for parquet_file in Path(parquets_dir).iterdir():
@@ -94,6 +97,6 @@ def download_images(
                 print(f"[INFO] {save_image_to.name} already exists! Skip. Next URL...")
                 continue
 
-            _download(data["file_url"], save_image_to, max_retry, 15)
+            _download(data["file_url"], save_image_to, max_retry, timeout, backoff_factor)
             print(f"{data['id']}-{image_name}")
 

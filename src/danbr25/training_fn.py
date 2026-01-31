@@ -1,3 +1,5 @@
+from copy import deepcopy
+from pathlib import Path
 import torch
 from torch.utils import data
 from torchvision.datasets import ImageFolder
@@ -171,9 +173,88 @@ def test(model, loader, loss_fn, device, classes):
     return report
 
 
+
+def start_training(
+    model,
+    loader,
+    loss_fn,
+    optimizer,
+    scheduler,
+    device,
+    scaler,
+    state_dicts,
+    classes,
+    start_epoch,
+    end_epoch,
+    patience_counter,
+    patience_stop,
+    model_dir
+):
+    for epoch in range(start_epoch, end_epoch):
+        train_loss = train(
+            model, loader["train"], optimizer,
+            loss_fn, device, scaler
+        )
+
+        (
+            validation_loss, precision,
+            recall, f1_score
+        ) = validation(
+            model, loader["validation"],
+            loss_fn, device, classes
+        )
+
+        state_dicts["train_losses"].append(train_loss)
+        state_dicts["validation_losses"].append(validation_loss)
+        state_dicts["validation_precisions"].append(precision)
+        state_dicts["validation_recalls"].append(recall)
+        state_dicts["validation_f1_scores"].append(f1_score)
+
+        if validation_loss < state_dicts["best_validation_loss"]:
+            state_dicts["best_validation_loss"] = validation_loss
+            state_dicts["best_model_state"] = deepcopy(
+                model.state_dict()
+            )
+            state_dicts["best_optimizer_state"] = deepcopy(
+                optimizer.state_dict()
+            )
+            state_dicts["epoch"] = epoch
+            torch.save(
+                state_dicts, model_dir/f"best_model_{epoch:03d}_{validation_loss:.4f}.pth"
+            )
+
+            if patience_counter > 0:
+                patience_counter = 0
+                print("Reset Patience Counter")
+        else:
+            patience_counter += 1
+            print(
+                f"[WARNING] Update Learning Rate ({patience_counter}/{patience_stop})",
+                sep="\n", end="\n\n"
+            )
+
+
+        print(
+            f"Epoch: {epoch}/{end_epoch-1}",
+            f"Train Loss: {train_loss:.4f}",
+            f"Val Loss: {validation_loss:.4f}",
+            f"Precision: {precision:.4f}",
+            f"Recall: {recall:.4f}",
+            f"F1-score: {f1_score:.4f}",
+            sep="\n",
+            end="\n\n"
+        )
+
+        scheduler.step(validation_loss)
+
+        if patience_counter >= patience_stop:
+            break
+
+
+
 def model_to_safetensors(
     model: torch.nn.Module,
-    save_path: str | Path | None = None
+    save_path: str | Path | None = None,
     device: str="cpu"
 ):
     model.eval()
